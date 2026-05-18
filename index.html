@@ -183,9 +183,9 @@
         max-height: 0;
         opacity: 0;
         overflow: hidden;
-        transition: 
-          max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
-          opacity 0.35s ease, 
+        transition:
+          max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+          opacity 0.35s ease,
           margin-top 0.4s ease;
       }
 
@@ -453,10 +453,10 @@
               <summary>Who we are</summary>
               <div class="collapsible-body">
                 <p class="info-p-block">
-                  Wa'tar  - "وتر", named after the Arabic word for "string" is an independent listening platform dedicated
-                  to recording and documenting unique oud performances from
-                  overlooked, unknown, and extraordinary musicians across the
-                  Arab world and beyond.
+                  Wa'tar - "وتر", named after the Arabic word for "string" is an
+                  independent listening platform dedicated to recording and
+                  documenting unique oud performances from overlooked, unknown,
+                  and extraordinary musicians across the Arab world and beyond.
                 </p>
                 <p class="info-p-block">
                   We actively preserve and expand an evolving archive of
@@ -607,50 +607,51 @@
         </section>
 
         <!-- UNIFIED CONTACT AND SUPPORT CHANNEL -->
-<section>
-  <div class="content-wrapper-block">
-    <details class="collapsible-wrapper">
-      <summary>Contact and support</summary>
+        <section>
+          <div class="content-wrapper-block">
+            <details class="collapsible-wrapper">
+              <summary>Contact and support</summary>
 
-      <div class="collapsible-body">
-        <div class="network-directory-block">
-          <h2 class="section-title"></h2>
-          <div class="horizontal-support-row">
-            <div class="support-mini-card">
-              <div class="mini-label">We love</div>
-              <a
-                href="https://ko-fi.com/watarstudio"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Coffee</a
-              >
-            </div>
+              <div class="collapsible-body">
+                <div class="network-directory-block">
+                  <h2 class="section-title"></h2>
+                  <div class="horizontal-support-row">
+                    <div class="support-mini-card">
+                      <div class="mini-label">We love</div>
+                      <a
+                        href="https://ko-fi.com/watarstudio"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Coffee</a
+                      >
+                    </div>
 
-            <div class="support-mini-card">
-              <div class="mini-label">Follow us</div>
-              <a
-                href="https://www.instagram.com/watar.st"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Instagram</a
-              >
-            </div>
+                    <div class="support-mini-card">
+                      <div class="mini-label">Follow us</div>
+                      <a
+                        href="https://www.instagram.com/watar.st"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Instagram</a
+                      >
+                    </div>
 
-            <div class="support-mini-card">
-              <div class="mini-label">E-mail</div>
-              <a href="mailto:watar.studio@outlook.com">Get in Touch</a>
-            </div>
+                    <div class="support-mini-card">
+                      <div class="mini-label">E-mail</div>
+                      <a href="mailto:watar.studio@outlook.com">Get in Touch</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </details>
           </div>
-        </div>
-      </div>
-
-    </details>
-  </div>
-</section>
+        </section>
 
         <div class="content-wrapper-block">
-          <footer>WA'TAR IS AN INDEPENDENT LISTENING PLATFORM FOR OUD LOVERS.
-            WHILE LISTENING, PLEASE CONSIDER SUPPORTING OUR TEAM.</footer>
+          <footer>
+            WA'TAR IS AN INDEPENDENT LISTENING PLATFORM FOR OUD LOVERS. WHILE
+            LISTENING, PLEASE CONSIDER SUPPORTING OUR TEAM.
+          </footer>
         </div>
       </main>
 
@@ -674,7 +675,7 @@
                       class="media-control-btn"
                       aria-label="Previous Track"
                     >
-                      ⏮
+                      ←
                     </button>
                     <button
                       id="playBtn"
@@ -690,7 +691,7 @@
                       class="media-control-btn"
                       aria-label="Next Track"
                     >
-                      ⏭
+                      →
                     </button>
                     <button
                       id="themeToggle"
@@ -713,7 +714,7 @@
     <!-- AUDIO DRIVER CORE ENGINE -->
     <audio id="audioPlayer" preload="auto"></audio>
 
-   <script>
+    <script>
       const playlist = [
         "music/Taqsseem - 1.mp3",
         "music/Taqsseem - 2.mp3",
@@ -750,25 +751,31 @@
 
       // NEW FUNCTION: Updates native macOS system player display info
       function updateMediaSessionMetadata(trackTitle) {
-        if ('mediaSession' in navigator) {
+        if ("mediaSession" in navigator) {
           navigator.mediaSession.metadata = new MediaMetadata({
             title: trackTitle,
             artist: "Oud Player",
             album: "Awtar Platform",
             artwork: [
-              { src: 'music/cover.png', sizes: '512x512', type: 'image/png' } // Optional default cover art
-            ]
+              { src: "music/cover.png", sizes: "512x512", type: "image/png" }, // Optional default cover art
+            ],
           });
         }
       }
 
       // NEW FUNCTION: Attaches physical Mac key bindings to script actions
       function initMediaSessionHandlers() {
-        if ('mediaSession' in navigator) {
-          navigator.mediaSession.setActionHandler('play', triggerPlay);
-          navigator.mediaSession.setActionHandler('pause', triggerPause);
-          navigator.mediaSession.setActionHandler('nexttrack', navigateNextTrack);
-          navigator.mediaSession.setActionHandler('previoustrack', navigatePreviousTrack);
+        if ("mediaSession" in navigator) {
+          navigator.mediaSession.setActionHandler("play", triggerPlay);
+          navigator.mediaSession.setActionHandler("pause", triggerPause);
+          navigator.mediaSession.setActionHandler(
+            "nexttrack",
+            navigateNextTrack,
+          );
+          navigator.mediaSession.setActionHandler(
+            "previoustrack",
+            navigatePreviousTrack,
+          );
         }
       }
 
@@ -781,7 +788,7 @@
           await audio.play();
           playBtn.innerText = "pause";
           // Sync native macOS state tracker to "playing"
-          if ('mediaSession' in navigator) {
+          if ("mediaSession" in navigator) {
             navigator.mediaSession.playbackState = "playing";
           }
         } catch (err) {
@@ -794,7 +801,7 @@
         audio.pause();
         playBtn.innerText = "play";
         // Sync native macOS state tracker to "paused"
-        if ('mediaSession' in navigator) {
+        if ("mediaSession" in navigator) {
           navigator.mediaSession.playbackState = "paused";
         }
       }
@@ -843,30 +850,30 @@
             isAnimating = true;
             el.open = true;
             const targetHeight = body.scrollHeight + "px";
-            
+
             requestAnimationFrame(() => {
               el.classList.add("is-expanded");
               body.style.maxHeight = targetHeight;
-              
-              setTimeout(() => { 
-                body.style.maxHeight = "none"; 
-                isAnimating = false; 
+
+              setTimeout(() => {
+                body.style.maxHeight = "none";
+                isAnimating = false;
               }, 400);
             });
           } else {
             isAnimating = true;
             body.style.maxHeight = body.scrollHeight + "px";
             el.classList.remove("is-expanded");
-            
+
             requestAnimationFrame(() => {
               setTimeout(() => {
                 body.style.maxHeight = "0";
               }, 10);
-              
+
               setTimeout(() => {
                 el.open = false;
                 isAnimating = false;
-              }, 400); 
+              }, 400);
             });
           }
         });
