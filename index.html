@@ -1,0 +1,867 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Oud Archive</title>
+
+    <style>
+      /* LOCAL FONT SYSTEM */
+      @font-face {
+        font-family: "IBM Plex Mono Local";
+        src: url("./fonts/IBMPlexMono-Regular.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      /* COLOR PALETTE SYSTEM */
+      :root {
+        --bg: #ffffff;
+        --text: #222222;
+        --muted: #777777;
+        --border: #222222;
+        --panel: #f7f7f7;
+      }
+
+      html.dark body {
+        --bg: #000000;
+        --text: #e5e5e5;
+        --muted: #888888;
+        --border: #333333;
+        --panel: #111111;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* CLASSY SMOOTH MULTI-LAYER TRANSITION COHESION FLOW */
+      html,
+      body,
+      main,
+      button,
+      .sidebar,
+      .app-fixed-dock-station,
+      .archive-item,
+      .section-title,
+      details.collapsible-wrapper,
+      .support-mini-card .mini-label,
+      footer,
+      a {
+        transition:
+          background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+          color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      body,
+      button,
+      .sidebar {
+        background-color: var(--bg);
+        color: var(--text);
+        font-family: "IBM Plex Mono Local", monospace;
+        line-height: 1.8;
+        letter-spacing: -0.2px;
+      }
+
+      img {
+        width: 100%;
+        display: block;
+        border: 1px solid var(--border);
+        opacity: 0.95;
+      }
+
+      .news-graphic {
+        margin-bottom: 24px;
+      }
+
+      .logo-inline-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        margin-bottom: 40px;
+      }
+
+      .logo-link-block {
+        display: block;
+        text-decoration: none;
+        border: none;
+      }
+
+      .primary-brand-box {
+        height: auto;
+        width: 65px;
+        border: none;
+        object-fit: contain;
+        display: block;
+      }
+
+      .logo-dark-mode {
+        display: none;
+      }
+      html.dark .logo-light-mode {
+        display: none;
+      }
+      html.dark .logo-dark-mode {
+        display: block;
+      }
+
+      .content-wrapper-block {
+        max-width: 480px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .section-title {
+        font-size: 0.75rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 12px;
+        margin-bottom: 20px;
+        color: var(--muted);
+        font-weight: 400;
+        width: 100%;
+      }
+
+      .network-directory-block {
+        margin-bottom: 35px;
+      }
+
+      /* REFINED COLLAPSIBLE SYSTEM CORE STYLES */
+      details.collapsible-wrapper {
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 30px;
+        padding-bottom: 12px;
+        width: 100%;
+        overflow: hidden; /* Essential to prevent layout text clipping during height shifts */
+      }
+
+      details.collapsible-wrapper summary {
+        font-size: 0.75rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 400;
+        cursor: pointer;
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        outline: none;
+        user-select: none;
+      }
+
+      details.collapsible-wrapper summary:hover {
+        color: var(--text);
+      }
+
+      details.collapsible-wrapper summary::-webkit-details-marker {
+        display: none;
+      }
+
+      details.collapsible-wrapper summary::after {
+        content: "[+]";
+        font-size: 0.7rem;
+        letter-spacing: 0;
+      }
+
+      /* Handled dynamically by JS to keep visual sync with transition timing */
+      details.collapsible-wrapper.is-expanded summary::after {
+        content: "[-]";
+      }
+
+      /* Content wrapper built specifically to hold the transition state */
+      .collapsible-body {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: 
+          max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+          opacity 0.35s ease, 
+          margin-top 0.4s ease;
+      }
+
+      details.collapsible-wrapper.is-expanded .collapsible-body {
+        opacity: 1;
+        margin-top: 20px;
+      }
+
+      .site {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      .main {
+        padding: 60px 20px 40px 20px;
+        width: 100%;
+        flex: 1;
+      }
+
+      section {
+        margin-bottom: 80px;
+        width: 100%;
+      }
+
+      .info-p-block {
+        font-size: 0.95rem;
+        line-height: 1.8;
+        text-align: justify;
+        text-justify: inter-word;
+        color: var(--text);
+        margin-bottom: 16px;
+      }
+
+      a {
+        color: var(--text);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+      }
+
+      a:hover,
+      a:focus-visible {
+        border-color: var(--text);
+        outline: none;
+      }
+
+      .read-more-link {
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        display: inline-block;
+        border-bottom: 1px solid transparent;
+        padding-bottom: 1px;
+      }
+
+      .archive-list {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+      }
+
+      .archive-item {
+        border: 1px solid var(--border);
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        background-color: var(--panel);
+      }
+
+      .archive-item span {
+        font-size: 0.9rem;
+      }
+
+      .archive-item a {
+        font-size: 0.8rem;
+        padding-bottom: 1px;
+      }
+
+      /* BALANCED FULL-WIDTH ROW ALIGNED WITH THE LINE ABOVE IT */
+      .horizontal-support-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        width: 100%;
+      }
+
+      .support-mini-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+
+      .support-mini-card .mini-label {
+        font-size: 0.55rem;
+        letter-spacing: 0.5px;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-bottom: 1px;
+      }
+
+      .support-mini-card a {
+        font-size: 0.85rem;
+        padding-bottom: 1px;
+      }
+
+      .app-fixed-dock-station {
+        position: sticky;
+        bottom: 0;
+        z-index: 9999;
+        width: 100%;
+        background-color: var(--bg);
+        padding: 20px 20px 40px 20px;
+      }
+
+      .sidebar {
+        border-top: 1px solid var(--border);
+        padding-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+      }
+
+      .player-box-sidebar-override {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        gap: 16px;
+        width: 100%;
+      }
+
+      .player-box-sidebar-override img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        margin: 0;
+      }
+
+      .player-meta {
+        min-width: 110px;
+      }
+
+      .player-title {
+        font-size: 0.7rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 2px;
+      }
+
+      .player-sub {
+        font-size: 0.8rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .player-controls-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 6px;
+      }
+
+      .controls-row-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        gap: 10px;
+      }
+
+      .controls-buttons-group {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+
+      button.media-control-btn,
+      button.theme-control-btn {
+        background: transparent;
+        border: 1px solid var(--border);
+        padding: 6px 12px;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        cursor: pointer;
+      }
+
+      button.media-control-btn:hover,
+      button.media-control-btn:focus-visible,
+      button.theme-control-btn:hover,
+      button.theme-control-btn:focus-visible {
+        background: var(--text);
+        color: var(--bg);
+        outline: none;
+      }
+
+      .sidebar-note {
+        border-top: 1px solid var(--border);
+        padding-top: 6px;
+        font-size: 0.6rem;
+        color: var(--muted);
+        line-height: 1.4;
+        width: 100%;
+        text-align: center;
+      }
+
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 30px 0 0 0;
+        color: var(--muted);
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+        text-align: center;
+        margin-top: 40px;
+        width: 100%;
+      }
+
+      @media (max-width: 480px) {
+        .player-meta {
+          display: none;
+        }
+      }
+    </style>
+
+    <script>
+      if (localStorage.getItem("oudArchiveTheme") === "dark") {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
+  </head>
+  <body>
+    <div class="site">
+      <main class="main">
+        <!-- BRAND LOGO COMPONENT -->
+        <div class="content-wrapper-block">
+          <div class="logo-inline-wrapper">
+            <a
+              href="https://theoudarchive.org"
+              class="logo-link-block"
+              aria-label="The Oud Archive Home"
+            >
+              <img
+                src="img/logo-light.png"
+                alt="The Oud Archive Logo"
+                class="primary-brand-box logo-light-mode"
+              />
+              <img
+                src="img/logo-dark.png"
+                alt="The Oud Archive Logo"
+                class="primary-brand-box logo-dark-mode"
+              />
+            </a>
+          </div>
+        </div>
+
+        <!-- SECTION 1: COLLAPSIBLE WHO WE ARE PANEL -->
+        <section>
+          <div class="content-wrapper-block">
+            <details class="collapsible-wrapper">
+              <summary>Who We Are</summary>
+              <div class="collapsible-body">
+                <p class="info-p-block">
+                  Wa'tar  - "وتر", named after the Arabic word for "the string" is an independent listening platform dedicated
+                  to recording and documenting unique oud performances from
+                  overlooked, unknown, and extraordinary musicians across the
+                  Arab world and beyond.
+                </p>
+                <p class="info-p-block">
+                  We actively preserve and expand an evolving archive of
+                  taqasim, recordings, luthiers, gatherings, festivals, and
+                  regional musical traditions connected to the oud. Our focus is
+                  not popularity, commercial reach, or algorithms — but the
+                  sound itself, and the people who keep it alive.
+                </p>
+                <p class="info-p-block">
+                  This platform exists as a quiet space for listening: free from
+                  advertisements, subscriptions, data tracking, and the noise of
+                  streaming culture. We do not sell anything. The archive is
+                  supported entirely through donations and community support.
+                </p>
+                <p class="info-p-block">
+                  Our goal is simple — to help preserve the oud and its living
+                  traditions, and to offer listeners, wherever they may be, a
+                  moment of presence through sound.
+                </p>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <!-- SECTION 2: COLLAPSIBLE ABOUT THE OUD PANEL -->
+        <section>
+          <div class="content-wrapper-block">
+            <details class="collapsible-wrapper">
+              <summary>About the Oud</summary>
+              <div class="collapsible-body">
+                <p class="info-p-block">
+                  The oud emerged through centuries of musical exchange across
+                  Mesopotamia, Persia, the Arab world, Anatolia, and Al-Andalus.
+                  Its fretless neck allows for the microtonal phrasing central
+                  to maqam traditions, giving the instrument its deeply vocal
+                  character.
+                </p>
+                <p class="info-p-block">
+                  While regional forms differ in tone, tuning, scale length, and
+                  construction, the oud remains one of the foundational
+                  instruments of Middle Eastern and North African music.
+                </p>
+                <p class="info-p-block">
+                  This archive focuses especially on taqasim, historical
+                  recordings, contemporary underground players, and the living
+                  traditions carried by luthiers and teachers across
+                  generations.
+                </p>
+                <a
+                  href="https://www.youtube.com/watch?v=XQNy7wyPuh4"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="read-more-link"
+                  aria-label="Learn more about the history of the Oud and Luthiers"
+                  >Learn More</a
+                >
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <!-- COLLAPSIBLE NEWS MODULE -->
+        <section>
+          <div class="content-wrapper-block">
+            <details class="collapsible-wrapper">
+              <summary>News</summary>
+              <div class="collapsible-body">
+                <img
+                  src="img/new-york-oud-festival.png"
+                  alt="Recent news update from the archive studios"
+                  class="news-graphic"
+                />
+                <p class="info-p-block">
+                  The New York Oud Festival is a multi-day, multi-venue music
+                  festival that displays the oud and its versatility as it
+                  exists in New York's diverse musical culture.
+                </p>
+                <p class="info-p-block">
+                  The NYOF celebrates the oud and its wide-ranging influence on
+                  global music culture, showcasing artists from a multitude of
+                  traditions and contexts, and demonstrating why the oud
+                  continues to be one of the world's most beloved instruments.
+                </p>
+                <a
+                  href="https://newyorkoudfestival.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="read-more-link"
+                  aria-label="Learn more about recent archive news updates"
+                  >Learn More</a
+                >
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <!-- SECTION 4: MAKERS ARCHIVE DIRECTORY -->
+        <section>
+          <div class="content-wrapper-block">
+            <details class="collapsible-wrapper">
+              <summary>Oud Makers</summary>
+              <div class="collapsible-body">
+                <div class="archive-list">
+                  <div class="archive-item">
+                    <span>Salih Bilgi — Türkiye</span>
+                    <a
+                      href="https://www.instagram.com/salihbilgiouds"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Visit Salih Bilgi Instagram Profile"
+                      >Instagram</a
+                    >
+                  </div>
+                  <div class="archive-item">
+                    <span>Nazih Ghadhban — Lebanon</span>
+                    <a
+                      href="https://www.instagram.com/nazihghadban"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Visit Nazih Ghadhban Instagram Profile"
+                      >Instagram</a
+                    >
+                  </div>
+                  <div class="archive-item">
+                    <span>Dimitris Rapakousios — Greece</span>
+                    <a
+                      href="https://www.instagram.com/dimitrisouds"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Visit Dimitris Rapakousios Instagram Profile"
+                      >Instagram</a
+                    >
+                  </div>
+                  <div class="archive-item">
+                    <span>Hamid Ghorbanzadeh — UK/IRAN</span>
+                    <a
+                      href="https://www.instagram.com/oudhamid"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Visit Hamid Ghorbanzadeh Instagram Profile"
+                      >Instagram</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <!-- UNIFIED CONTACT AND SUPPORT CHANNEL -->
+        <section>
+          <div class="content-wrapper-block">
+            <div class="network-directory-block">
+              <h2 class="section-title">Contact and support</h2>
+              <div class="horizontal-support-row">
+                <div class="support-mini-card">
+                  <div class="mini-label">We love</div>
+                  <a
+                    href="https://ko-fi.com/watarstudio"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Coffee</a
+                  >
+                </div>
+                <div class="support-mini-card">
+                  <div class="mini-label">Follow us</div>
+                  <a
+                    href="https://www.instagram.com/watar.st"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Instagram</a
+                  >
+                </div>
+                <div class="support-mini-card">
+                  <div class="mini-label">E-mail</div>
+                  <a href="mailto:watar.studio@outlook.com">Get in Touch</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="content-wrapper-block">
+          <footer>WA'TAR IS AN INDEPENDENT LISTENING PLATFORM FOR OUD LOVERS.
+            WHILE LISTENING, PLEASE CONSIDER SUPPORTING OUR TEAM.</footer>
+        </div>
+      </main>
+
+      <!-- UNIFIED STICKY PANEL STATION -->
+      <div class="app-fixed-dock-station">
+        <div class="content-wrapper-block">
+          <aside class="sidebar">
+            <div class="player-box player-box-sidebar-override">
+              <img src="img/taqseem.png" alt="Current Play Track Graphic" />
+              <div class="player-controls-container">
+                <div class="controls-row-top">
+                  <div class="player-meta">
+                    <div class="player-title">Archive Feed</div>
+                    <div class="player-sub" id="trackDisplay">Taqseem — 1</div>
+                  </div>
+
+                  <div class="controls-buttons-group">
+                    <button
+                      id="prevBtn"
+                      type="button"
+                      class="media-control-btn"
+                      aria-label="Previous Track"
+                    >
+                      ⏮
+                    </button>
+                    <button
+                      id="playBtn"
+                      type="button"
+                      class="media-control-btn"
+                      style="font-weight: 500"
+                    >
+                      play
+                    </button>
+                    <button
+                      id="nextBtn"
+                      type="button"
+                      class="media-control-btn"
+                      aria-label="Next Track"
+                    >
+                      ⏭
+                    </button>
+                    <button
+                      id="themeToggle"
+                      type="button"
+                      class="theme-control-btn"
+                      style="margin-left: 6px"
+                    >
+                      mode
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="sidebar-note">WA'TAR — A LIVING MEMORY.</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUDIO DRIVER CORE ENGINE -->
+    <audio id="audioPlayer" preload="auto"></audio>
+
+   <script>
+      const playlist = [
+        "music/Taqsseem - 1.mp3",
+        "music/Taqsseem - 2.mp3",
+        "music/Taqsseem - 3.mp3",
+        "music/Taqsseem - 4.mp3",
+        "music/Taqsseem - 5.mp3",
+        "music/Taqsseem - 6.mp3",
+        "music/Taqsseem - 7.mp3",
+      ];
+
+      let currentTrackIndex = 0;
+      const audio = document.getElementById("audioPlayer");
+      const playBtn = document.getElementById("playBtn");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const themeToggle = document.getElementById("themeToggle");
+      const trackDisplay = document.getElementById("trackDisplay");
+
+      function loadTrack(index) {
+        currentTrackIndex = index;
+        audio.src = playlist[currentTrackIndex];
+
+        const fileName = playlist[currentTrackIndex]
+          .split("/")
+          .pop()
+          .replace(".mp3", "");
+
+        const cleanedName = fileName.replace("Taqsseem", "Taqseem");
+        trackDisplay.innerText = cleanedName;
+
+        // Sync track information with macOS Control Center and Lock Screen
+        updateMediaSessionMetadata(cleanedName);
+      }
+
+      // NEW FUNCTION: Updates native macOS system player display info
+      function updateMediaSessionMetadata(trackTitle) {
+        if ('mediaSession' in navigator) {
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: trackTitle,
+            artist: "Oud Player",
+            album: "Awtar Platform",
+            artwork: [
+              { src: 'music/cover.png', sizes: '512x512', type: 'image/png' } // Optional default cover art
+            ]
+          });
+        }
+      }
+
+      // NEW FUNCTION: Attaches physical Mac key bindings to script actions
+      function initMediaSessionHandlers() {
+        if ('mediaSession' in navigator) {
+          navigator.mediaSession.setActionHandler('play', triggerPlay);
+          navigator.mediaSession.setActionHandler('pause', triggerPause);
+          navigator.mediaSession.setActionHandler('nexttrack', navigateNextTrack);
+          navigator.mediaSession.setActionHandler('previoustrack', navigatePreviousTrack);
+        }
+      }
+
+      loadTrack(0);
+      initMediaSessionHandlers(); // Bind Mac hardware actions on startup
+      audio.volume = 0.8;
+
+      async function triggerPlay() {
+        try {
+          await audio.play();
+          playBtn.innerText = "pause";
+          // Sync native macOS state tracker to "playing"
+          if ('mediaSession' in navigator) {
+            navigator.mediaSession.playbackState = "playing";
+          }
+        } catch (err) {
+          console.error("Audio pipeline initialization exception fired.", err);
+          playBtn.innerText = "play";
+        }
+      }
+
+      function triggerPause() {
+        audio.pause();
+        playBtn.innerText = "play";
+        // Sync native macOS state tracker to "paused"
+        if ('mediaSession' in navigator) {
+          navigator.mediaSession.playbackState = "paused";
+        }
+      }
+
+      playBtn.addEventListener("click", () => {
+        if (audio.paused) {
+          triggerPlay();
+        } else {
+          triggerPause();
+        }
+      });
+
+      function navigateNextTrack() {
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+        loadTrack(currentTrackIndex);
+        triggerPlay();
+      }
+
+      function navigatePreviousTrack() {
+        currentTrackIndex =
+          (currentTrackIndex - 1 + playlist.length) % playlist.length;
+        loadTrack(currentTrackIndex);
+        triggerPlay();
+      }
+
+      nextBtn.addEventListener("click", navigateNextTrack);
+      prevBtn.addEventListener("click", navigatePreviousTrack);
+      audio.addEventListener("ended", navigateNextTrack);
+
+      themeToggle.addEventListener("click", () => {
+        const isDark = document.documentElement.classList.toggle("dark");
+        localStorage.setItem("oudArchiveTheme", isDark ? "dark" : "light");
+      });
+
+      // ACCORDION SMOOTH HEIGHT EXPANSION ENGINE
+      document.querySelectorAll("details.collapsible-wrapper").forEach((el) => {
+        const summary = el.querySelector("summary");
+        const body = el.querySelector(".collapsible-body");
+        let isAnimating = false;
+
+        summary.addEventListener("click", (e) => {
+          e.preventDefault();
+          if (isAnimating) return;
+
+          if (!el.open) {
+            isAnimating = true;
+            el.open = true;
+            const targetHeight = body.scrollHeight + "px";
+            
+            requestAnimationFrame(() => {
+              el.classList.add("is-expanded");
+              body.style.maxHeight = targetHeight;
+              
+              setTimeout(() => { 
+                body.style.maxHeight = "none"; 
+                isAnimating = false; 
+              }, 400);
+            });
+          } else {
+            isAnimating = true;
+            body.style.maxHeight = body.scrollHeight + "px";
+            el.classList.remove("is-expanded");
+            
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                body.style.maxHeight = "0";
+              }, 10);
+              
+              setTimeout(() => {
+                el.open = false;
+                isAnimating = false;
+              }, 400); 
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
